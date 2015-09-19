@@ -10,16 +10,7 @@ public class MapController : MonoBehaviour {
 
 	public int[,] mapDataTiles;						//2d Array to hold all the tiles for the map. // coordinates and index number for the tiletype
 
-	public struct Coord	{
-		public int x;
-		public int z;
-
-		public Coord(int Coordx, int Coordz) {
-			x = Coordx;
-			z = Coordz;
-		}
-	}
-
+	
 	// Methods that could be usefull outside of this script
 	/* *************************************************************** */
 
@@ -77,8 +68,6 @@ public class MapController : MonoBehaviour {
 	void Awake () {
 		GenerateTileTypes();
 
-		//GenerateFloor(150,100);
-
 		ProcessImage();
 
 		// Generate Floor, Wall and Roof meshes
@@ -104,7 +93,6 @@ public class MapController : MonoBehaviour {
 		MeshGenerator meshGen = GetComponent<MeshGenerator>();
 		meshGen.GenerateMesh(map, 1);
 		meshGen.GenerateFloorMesh(floorMap, 1);
-
 	}
 
 	void Start () {
@@ -191,6 +179,11 @@ public class MapController : MonoBehaviour {
 				}
 			}
 		}
+
+		//******************************** Under construction
+		GenerateFogOfWarPlane(texture.width, texture.height);
+		//***************************************************
+
 		Resources.UnloadAsset(texture);
 		texture = null;
 	}
@@ -232,23 +225,21 @@ public class MapController : MonoBehaviour {
 	}
 
 
-	// TESTING not in use at the moment
-	// Creates ONE big plane in the size of the map.
-	void GenerateFloor(int width, int height){
+	/* *************************************  FOG OF WAR CREATION ************************************* */
+	void GenerateFogOfWarPlane(int mapWidth, int mapHeight){
 
-		Mesh mesh 		 = new Mesh();  	// The mesh (verticies, uvs, triangels).
-		GameObject floor = new GameObject();// The GameObject the mesh should be attached to.
+		Mesh mesh 		 	= new Mesh();  	// The mesh (verticies, uvs, triangels).
+		GameObject FogOfWar = new GameObject();// The GameObject the mesh should be attached to.
 
-		floor.name 		 = "FloorPlane";	// Name of the GameObject that appears in the "hierarchy list"
-
-		mesh.name 		 = "GroundPlane" ;  // Name of the mesh, appears in the inspector under meshRenderer (if u select the Gameobject floor)
+		FogOfWar.name 	 = "FogOfWarPlane";	// Name of the GameObject that appears in the "hierarchy list"
+		mesh.name 		 = "FogOfWarMesh" ;  // Name of the mesh, appears in the inspector under meshRenderer (if u select the Gameobject floor)
 
 		// Assign the possitions of the verticies with a array of vector3's;
 		mesh.vertices 	 = new Vector3[] { 
-										  new Vector3(    0, 0,      0),  	// bottom left
-										  new Vector3(    0, 0, height), 	// top left
-										  new Vector3(width, 0, height),	// top right
-										  new Vector3(width, 0,      0)		// bottom right
+										  new Vector3(    	 0, 0,	       0), 	// bottom left
+										  new Vector3(    	 0, 0, mapHeight), 	// top left
+										  new Vector3(mapWidth, 0, mapHeight),	// top right
+										  new Vector3(mapWidth, 0,   	   0)	// bottom right
 										};
 		// Assign the texture coordinates.
 		mesh.uv 		= new Vector2[] {
@@ -261,15 +252,63 @@ public class MapController : MonoBehaviour {
 		mesh.triangles 	= new int[] { 0, 1, 2, 0, 2, 3};
 
 		// add the meshfilter to the gameobject and assign the mesh we just created.
-		floor.AddComponent<MeshFilter>().mesh = mesh;
+		FogOfWar.AddComponent<MeshFilter>().mesh = mesh;
 
 		// add the meshrenderer component to the gameObject. (and store the component in a variable)
-		MeshRenderer renderer = floor.AddComponent<MeshRenderer>();
+		MeshRenderer renderer = FogOfWar.AddComponent<MeshRenderer>();
 
-		// add the standard material to the meshRender component
+		// turn of casting and receveing Shadows on the MeshRenderer
+		renderer.receiveShadows = false;
+		renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
+
+		// add material to the meshRender component
 		renderer.material.shader = Shader.Find("Standard");
+
+		// the Y = 3,5f is to place it above the terrain 
+		FogOfWar.transform.position = new Vector3(0, 3 + 0.5f, 0);
+
+
+		GenerateFogOfWarCamera(mapWidth, mapHeight);
 	}
 
+
+	void GenerateFogOfWarCamera(int mapSizeX, int mapSizeZ){
+
+		GameObject fogCam = new GameObject();
+		fogCam.name = "fogCam";
+
+		// The Y value just needs to be higher than the terrain.. the camera is orthographic.
+		fogCam.transform.position    = new Vector3(mapSizeX / 2, 50, mapSizeZ / 2);
+		// Rotate the camera so it looks down
+		fogCam.transform.eulerAngles = new Vector3(90, 0, 0);
+		// add the gameObject to a layer (layer not created in script)
+		fogCam.layer = 8; //FogOfWarLayer
+		
+		// Add a cameraComponent to the gameObject
+		Camera camComponent = fogCam.AddComponent<Camera>();
+
+		// The camera should only see things in the FogOfWarLayer
+		camComponent.cullingMask     	= (1 << LayerMask.NameToLayer("FogOfWarLayer"));
+		// The camera 
+		camComponent.clearFlags 		= UnityEngine.CameraClearFlags.Depth;
+		// make the camera orthographic
+		camComponent.orthographic 		= true;
+		// The camera must cover the whole map
+		camComponent.orthographicSize 	= mapSizeZ / 2;
+
+
+		// Create the texture that the camera should render to.
+		RenderTexture FogOfWarTexture 	= new RenderTexture( mapSizeX, mapSizeZ, 0);
+		FogOfWarTexture.name 			= "FogOfWarTexture";
+		FogOfWarTexture.anisoLevel 		= 0;
+		//FogOfWarTexture.Create();
+
+		// Assign the texture to the cameraOutput.
+		camComponent.targetTexture = FogOfWarTexture;
+
+		//Should be true ... just for debugging it is off at the moment.
+		camComponent.enabled = false;
+	}
 
 
 

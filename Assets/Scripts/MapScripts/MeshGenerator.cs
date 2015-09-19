@@ -3,7 +3,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class MeshGenerator : MonoBehaviour {
-	
+
+	public int terrainHeight = 3;
+
 	public SquareGrid squareGrid;
 	
 	List<Vector3> vertices;
@@ -108,7 +110,7 @@ public class MeshGenerator : MonoBehaviour {
 		// add the standard material to the meshRender component
 		renderer.material.shader = Shader.Find("Standard");
 
-		floor.transform.Translate( new Vector3 (0,-3,0));
+		floor.transform.Translate( new Vector3 (0, -terrainHeight, 0) );
 
 		// Assign a texture
 		Texture2D text = (Texture2D)Resources.Load("Textures/MapTextures/Floor_Tile_01");
@@ -122,7 +124,7 @@ public class MeshGenerator : MonoBehaviour {
 		List<Vector3> wallVertices  = new List<Vector3> ();
 		List<int> wallTriangles     = new List<int> ();
 		Mesh wallMesh 				= new Mesh ();
-		float wallHeight 			= 3;
+		float wallHeight 			= terrainHeight;
 
 		GameObject wall  = new GameObject();	// The GameObject the mesh should be attached to.
 		wall.name 		 = "Walls";				// Name of the GameObject that appears in the "hierarchy list"
