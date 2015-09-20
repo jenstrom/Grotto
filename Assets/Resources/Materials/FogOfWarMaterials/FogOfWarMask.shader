@@ -2,7 +2,7 @@
 	Properties {
 		_Color("Main Color", Color) = (1,1,1,1)
 		_MainTex ("Base (RGB)", 2D) = "white" {}
-		_BlurPower("BlurPower", float) = 0.002
+		_BlurPower("BlurPower", float) = 0.01
 	}
 	SubShader {
 		Tags { "Queue"="Transparent" "RenderType"="Transparent" "LightMode"="ForwardBase" }
