@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 public class MeshGenerator : MonoBehaviour {
 
-	public int terrainHeight = 3;
+	public static int terrainHeight = 3;
 
 	public SquareGrid squareGrid;
 	
@@ -106,15 +106,22 @@ public class MeshGenerator : MonoBehaviour {
 
 		// add the meshrenderer component to the gameObject. (and store the component in a variable)
 		MeshRenderer renderer = floor.AddComponent<MeshRenderer>();
-		
-		// add the standard material to the meshRender component
-		renderer.material.shader = Shader.Find("Standard");
 
+		//move the floor in y
 		floor.transform.Translate( new Vector3 (0, -terrainHeight, 0) );
+
+
+
+		/* LETS NOT DO THIS
+		// add the standard shader to the meshRender component
+		renderer.material.shader = Shader.Find("Standard");
 
 		// Assign a texture
 		Texture2D text = (Texture2D)Resources.Load("Textures/MapTextures/Floor_Tile_01");
 		renderer.material.mainTexture = (Texture2D)text;
+		*/
+		//LETS DO THIS INSTEAD
+		renderer.material = Resources.Load("Materials/MapMaterials/Mat_Floor_Tile_01") as Material;
 	}
 	
 	void CreateWallMesh() {
@@ -132,6 +139,7 @@ public class MeshGenerator : MonoBehaviour {
 		
 		foreach (List<int> outline in outlines) {
 			for (int i = 0; i < outline.Count -1; i ++) {
+
 				int startIndex = wallVertices.Count;
 				wallVertices.Add(vertices[outline[i]]); // left
 				wallVertices.Add(vertices[outline[i+1]]); // right
@@ -157,9 +165,6 @@ public class MeshGenerator : MonoBehaviour {
 
 		// add the meshrenderer component to the gameObject. (and store the component in a variable)
 		MeshRenderer renderer = wall.AddComponent<MeshRenderer>();
-		
-		// add the standard material to the meshRender component
-		renderer.material.shader = Shader.Find("Standard");
 
 		// Generate UVs
 		Vector2[] uvs = new Vector2[wallVertices.Count];
@@ -169,10 +174,18 @@ public class MeshGenerator : MonoBehaviour {
 			uvs[i] = new Vector2(percentX,percentY);
 		}
 		wallMesh.uv = uvs;
+
+
+		/* LETS NOT DO THIS
+		// add the standard material to the meshRender component
+		renderer.material.shader = Shader.Find("Standard");
 		
 		// Assign a texture
 		Texture2D text = (Texture2D)Resources.Load("Textures/MapTextures/Wall_01");
 		renderer.material.mainTexture = (Texture2D)text;
+		*/
+		//LETS DO THIS INSTEAD
+		renderer.material = Resources.Load("Materials/MapMaterials/Mat_Wall_01") as Material;
 
 	}
 	
@@ -382,16 +395,13 @@ public class MeshGenerator : MonoBehaviour {
 		public SquareGrid(int[,] map, float squareSize) {
 			int nodeCountX = map.GetLength(0);
 			int nodeCountY = map.GetLength(1);
-			//float mapWidth = nodeCountX * squareSize;
-			//float mapHeight = nodeCountY * squareSize;
-			
+
 			ControlNode[,] controlNodes = new ControlNode[nodeCountX,nodeCountY];
 			
 			for (int x = 0; x < nodeCountX; x ++) {
 				for (int z = 0; z < nodeCountY; z ++) {
-					//Vector3 pos = new Vector3(-mapWidth/2 + x * squareSize + squareSize/2, 0, -mapHeight/2 + y * squareSize + squareSize/2);
 
-					Vector3 pos = new Vector3(x * squareSize + squareSize/2 , 3, z * squareSize + squareSize/2 );
+					Vector3 pos = new Vector3(x * squareSize + squareSize/2 , terrainHeight, z * squareSize + squareSize/2 );
 					controlNodes[x,z] = new ControlNode(pos,map[x,z] == 1, squareSize);
 				}
 			}

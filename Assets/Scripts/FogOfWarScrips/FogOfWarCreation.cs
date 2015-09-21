@@ -61,7 +61,7 @@ public class FogOfWarCreation {
 		GenerateFogOfWar2(mapSizeX, mapSizeZ);
 	}
 	
-	/************************************************************/
+	/* Need refacoring, do not repeat code ***********************************************************/
 	void GenerateFogOfWar2(int mapSizeX, int mapSizeZ){
 		
 		// Creates the Camera that Render the blendmaterial to a texture
@@ -195,9 +195,9 @@ public class FogOfWarCreation {
 	
 	void GenerateFogOfWarSeeThroughPlane() {
 		
-		// Create a plane thet masks out what should be visible in the blendmaterial (fog)
+		// Create a plane that masks out what should be visible in the blendmaterial (fog)
 		
-		int planeSize 		= 10;
+		int planeSize 		= 18;
 		
 		Mesh mesh 		 	= new Mesh();  	// The mesh (verticies, uvs, triangels).
 		GameObject FogOfWarSeeThroughPlane = new GameObject();// The GameObject the mesh should be attached to.

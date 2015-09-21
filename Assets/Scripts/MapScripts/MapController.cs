@@ -4,7 +4,9 @@ using System.Collections;
 using System.Collections.Generic;
 
 public class MapController : MonoBehaviour {
-	
+
+	public bool generateFogOfWar = true;
+
 	public int numberOfLevels   = 2;				//How many map texures do we have
 	public TileType[] tileTypes = new TileType[7];	//Holds the.. you guessed it, tiletypes.
 
@@ -181,9 +183,11 @@ public class MapController : MonoBehaviour {
 			}
 		}
 
-		//Generate FogOfWar from fogofwar script (based on map size) 
-		FogOfWarCreation fow = new FogOfWarCreation();
-		fow.GenerateFogOfWar(texture.width, texture.height);
+		if (generateFogOfWar){
+			//Generate FogOfWar from fogofwar script (based on map size) 
+			FogOfWarCreation fow = new FogOfWarCreation();
+			fow.GenerateFogOfWar(texture.width, texture.height);
+		}
 
 		//Remove maptexture from memory
 		Resources.UnloadAsset(texture);

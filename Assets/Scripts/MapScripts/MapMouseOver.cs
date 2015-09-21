@@ -32,13 +32,15 @@ public class MapMouseOver : MonoBehaviour {
 			GameObject map = GameObject.Find("MapController");
 			MapController mapController = map.GetComponent<MapController>();
 
-			//bool gay = mapController.GetTileType(x,z).isWalkable;
-			
+
+			// If the tile is walkable. 
 			if( mapController.GetTileType(x,z).isWalkable )
 			{
-				//Debug.Log ( "x " + currentTileCoord.x + " z " + currentTileCoord.z  );
-
 				selection.transform.position = currentTileCoord;
+			}
+			else {
+				// Hide selection cube
+				selection.SetActive(false);
 			}
 		
 		}
