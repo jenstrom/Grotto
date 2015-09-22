@@ -99,6 +99,7 @@ public class MeshGenerator : MonoBehaviour {
 
 		floor.AddComponent<MeshCollider>();
 
+		floor.tag = "Floor";
 
 		//MOUSEOVER 
 		floor.AddComponent<MapMouseOver>();
@@ -162,6 +163,8 @@ public class MeshGenerator : MonoBehaviour {
 		wall.AddComponent<MeshFilter>().mesh = wallMesh;
 
 		wall.AddComponent<MeshCollider>();
+
+		wall.tag = "Wall";
 
 		// add the meshrenderer component to the gameObject. (and store the component in a variable)
 		MeshRenderer renderer = wall.AddComponent<MeshRenderer>();

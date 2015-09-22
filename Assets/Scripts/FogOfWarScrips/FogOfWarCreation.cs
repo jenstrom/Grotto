@@ -82,7 +82,7 @@ public class FogOfWarCreation {
 		// The camera should only see things in the FogOfWarLayer
 		fogCamComponent.cullingMask     	= (1 << LayerMask.NameToLayer("FogOfWarLayer"));
 		// ..
-		fogCamComponent.clearFlags 		= UnityEngine.CameraClearFlags.SolidColor;
+		fogCamComponent.clearFlags 			= UnityEngine.CameraClearFlags.SolidColor;
 		// make the camera orthographic
 		fogCamComponent.orthographic 		= true;
 		// The camera must cover the whole map
