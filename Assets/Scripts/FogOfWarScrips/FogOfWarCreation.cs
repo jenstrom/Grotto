@@ -19,11 +19,11 @@ using System.Collections;
  */
 
 public class FogOfWarCreation {
+   
+    public void  GenerateFogOfWar(int mapSizeX, int mapSizeZ){
 
-	public void  GenerateFogOfWar(int mapSizeX, int mapSizeZ){
-
-		// Creates the Camera that Render the blendmaterial to a texture
-		
+        // Creates the Camera that Render the blendmaterial to a texture
+        
 		GameObject fogCam 	= new GameObject();
 		fogCam.name 		= "FogOfWarCam";
 		
@@ -54,8 +54,8 @@ public class FogOfWarCreation {
 		
 		// Assign the texture to the cameraOutput.
 		fogCamComponent.targetTexture = fogOfWarTexture;
-		
-		GenerateFogOfWarPlane(mapSizeX, mapSizeZ, fogOfWarTexture);
+
+        GenerateFogOfWarPlane(mapSizeX, mapSizeZ, fogOfWarTexture);
 		
 		//Generate second camera
 		GenerateFogOfWar2(mapSizeX, mapSizeZ);
@@ -96,10 +96,9 @@ public class FogOfWarCreation {
 		
 		// Assign the texture to the cameraOutput.
 		fogCamComponent.targetTexture = fogOfWarTexture;
-		
-		
-		//Generate Second Plane
-		GenerateFogOfWarPlane2(mapSizeX, mapSizeZ, fogOfWarTexture);
+
+        //Generate Second Plane
+        GenerateFogOfWarPlane2(mapSizeX, mapSizeZ, fogOfWarTexture);
 	}
 	
 	
@@ -144,8 +143,8 @@ public class FogOfWarCreation {
 		
 		renderer.material = Resources.Load ("Materials/FogOfWarMaterials/SemiTransparentMaterial") as Material;
 
-		// Assign the texture we created as a cameraOutput.
-		renderer.material.mainTexture = fogOfWarTexture;
+        // Assign the texture we created as a cameraOutput.
+        renderer.material.mainTexture = fogOfWarTexture;
 	}
 	/************************************************************/
 
@@ -189,8 +188,8 @@ public class FogOfWarCreation {
 		renderer.material.shader = Shader.Find ("Custom/FogOfWarMask");
 		// Assign the texture we created as a cameraOutput.
 		renderer.material.mainTexture = fogOfWarTexture;
-		
-		GenerateFogOfWarSeeThroughPlane();
+
+        GenerateFogOfWarSeeThroughPlane();
 	}
 	
 	void GenerateFogOfWarSeeThroughPlane() {
@@ -241,5 +240,5 @@ public class FogOfWarCreation {
 		renderer.shadowCastingMode = UnityEngine.Rendering.ShadowCastingMode.Off;
 		// add the material 
 		renderer.material = Resources.Load ("Materials/FogOfWarMaterials/MaskMaterial") as Material;
-	}
+    }
 }

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 public class MeshGenerator : MonoBehaviour {
 
-	public static int terrainHeight = 3;
+    public static int terrainHeight = 3;
 
 	public SquareGrid squareGrid;
 	
@@ -15,7 +15,8 @@ public class MeshGenerator : MonoBehaviour {
 	HashSet<int> checkedVertices = new HashSet<int>();
 	
 	public void GenerateMesh(int[,] map, float squareSize) {
-		squareGrid = new SquareGrid(map, squareSize);
+
+        squareGrid = new SquareGrid(map, squareSize);
 		
 		vertices = new List<Vector3>();
 		triangles = new List<int>();
@@ -57,8 +58,8 @@ public class MeshGenerator : MonoBehaviour {
 		// Assign a texture
 		Texture2D text = (Texture2D)Resources.Load("Textures/MapTextures/Roof_Tile_01");
 		renderer.material.mainTexture = (Texture2D)text;
-
-		CreateWallMesh();
+        
+        CreateWallMesh();
 	}
 
 
@@ -109,10 +110,8 @@ public class MeshGenerator : MonoBehaviour {
 
 		//move the floor in y
 		floor.transform.Translate( new Vector3 (0, -terrainHeight, 0) );
-
-
-
-		/* LETS NOT DO THIS
+        
+        /* LETS NOT DO THIS
 		// add the standard shader to the meshRender component
 		renderer.material.shader = Shader.Find("Standard");
 
@@ -120,8 +119,8 @@ public class MeshGenerator : MonoBehaviour {
 		Texture2D text = (Texture2D)Resources.Load("Textures/MapTextures/Floor_Tile_01");
 		renderer.material.mainTexture = (Texture2D)text;
 		*/
-		//LETS DO THIS INSTEAD
-		renderer.material = Resources.Load("Materials/MapMaterials/Mat_Floor_Tile_01") as Material;
+        //LETS DO THIS INSTEAD
+        renderer.material = Resources.Load("Materials/MapMaterials/Mat_Floor_Tile_01") as Material;
 	}
 	
 	void CreateWallMesh() {
@@ -181,8 +180,7 @@ public class MeshGenerator : MonoBehaviour {
 		}
 		wallMesh.uv = uvs;
 
-
-		/* LETS NOT DO THIS
+        /* LETS NOT DO THIS
 		// add the standard material to the meshRender component
 		renderer.material.shader = Shader.Find("Standard");
 		
@@ -190,8 +188,8 @@ public class MeshGenerator : MonoBehaviour {
 		Texture2D text = (Texture2D)Resources.Load("Textures/MapTextures/Wall_01");
 		renderer.material.mainTexture = (Texture2D)text;
 		*/
-		//LETS DO THIS INSTEAD
-		renderer.material = Resources.Load("Materials/MapMaterials/Mat_Wall_01") as Material;
+        //LETS DO THIS INSTEAD
+        renderer.material = Resources.Load("Materials/MapMaterials/Mat_Wall_01") as Material;
 
 	}
 	

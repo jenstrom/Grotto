@@ -135,9 +135,9 @@ public class MapController : MonoBehaviour {
 
 		tileTypes [4].name 		 = "Torch";
 		tileTypes [4].isWalkable = true;
-        tileTypes[4].prefab      = Resources.Load("Prefabs/MapPrefabs/Torch_01_Prefab") as GameObject;
+        tileTypes [4].prefab     = Resources.Load("Prefabs/MapPrefabs/Torch_01_Prefab") as GameObject;
 		tileTypes [4].display 	 = true;
-        tileTypes[4].color       = Color.magenta;
+        tileTypes [4].color      = Color.magenta;
 
         tileTypes [5].name 		 = "Map Goal Point";
 		tileTypes [5].isWalkable = true;
@@ -147,7 +147,7 @@ public class MapController : MonoBehaviour {
 
 		tileTypes [6].name 		 = "Door";
 		tileTypes [6].isWalkable = true;
-        tileTypes[6].prefab      = null;
+        tileTypes [6].prefab     = null;
 		tileTypes [6].display 	 = true;
         tileTypes [6].color 	 = Color.yellow;
 
@@ -238,7 +238,7 @@ public class MapController : MonoBehaviour {
                     var down    = mapDataTiles[x, z - 1];
 
                     // Put the prefab in the scene and save its transform to a variable.
-                    GameObject prefab = Instantiate(Resources.Load("Prefabs/MapPrefabs/Door_A_Prefab") ) as GameObject;
+                    GameObject prefab = Instantiate(Resources.Load("Prefabs/MapPrefabs/Door_01_Prefab") ) as GameObject;
 
                     Transform t = prefab.transform;
                     
