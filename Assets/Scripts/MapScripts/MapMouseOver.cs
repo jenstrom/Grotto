@@ -7,8 +7,6 @@ public class MapMouseOver : MonoBehaviour {
 
 	public GameObject selection = Resources.Load ("Prefabs/MapPrefabs/MousePositionPrefab") as GameObject;
 
-	//public MapController mapController;
-
 	void Awake () {
 	
 		selection = Instantiate(selection) as GameObject;
@@ -24,8 +22,8 @@ public class MapMouseOver : MonoBehaviour {
 			int z = Mathf.FloorToInt( hitInfo.point.z );
 			//Debug.Log ("Tile: " + x + ", " + z);
 
-			currentTileCoord.x = x + 0.5f;
-			currentTileCoord.z = z + 0.5f;
+			currentTileCoord.x = x ;
+			currentTileCoord.z = z ;
 
 			selection.SetActive(true);
 

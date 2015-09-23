@@ -242,7 +242,7 @@ public class PlayerController : MonoBehaviour
 	
 	void PlayerAction(Vector3 target)
 	{
-		Collider[] onTargetTile = Physics.OverlapSphere(target, 0f);
+        Collider[] onTargetTile = Physics.OverlapSphere(target, 0f);
 
 		if (onTargetTile.Length == 0)
 		{

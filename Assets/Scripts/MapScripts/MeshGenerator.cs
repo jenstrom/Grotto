@@ -1,5 +1,4 @@
 ﻿using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 
 public class MeshGenerator : MonoBehaviour {
@@ -162,12 +161,16 @@ public class MeshGenerator : MonoBehaviour {
 		// add the meshfilter to the gameobject and assign the mesh we just created.
 		wall.AddComponent<MeshFilter>().mesh = wallMesh;
 
-		wall.AddComponent<MeshCollider>();
-
+        // Assign the wall tag to the gameobject
 		wall.tag = "Wall";
 
-		// add the meshrenderer component to the gameObject. (and store the component in a variable)
-		MeshRenderer renderer = wall.AddComponent<MeshRenderer>();
+        //Calculate the normals on the faces of the mesh
+        wallMesh.RecalculateNormals();
+
+        wall.AddComponent<MeshCollider>();
+
+        // add the meshrenderer component to the gameObject. (and store the component in a variable)
+        MeshRenderer renderer = wall.AddComponent<MeshRenderer>();
 
 		// Generate UVs
 		Vector2[] uvs = new Vector2[wallVertices.Count];
@@ -268,7 +271,6 @@ public class MeshGenerator : MonoBehaviour {
 			CreateTriangle(points[0], points[3], points[4]);
 		if (points.Length >= 6)
 			CreateTriangle(points[0], points[4], points[5]);
-		
 	}
 	
 	void AssignVertices(Node[] points) {
@@ -386,7 +388,6 @@ public class MeshGenerator : MonoBehaviour {
 			}
 		}
 		
-		
 		public bool Contains(int vertexIndex) {
 			return vertexIndex == vertexIndexA || vertexIndex == vertexIndexB || vertexIndex == vertexIndexC;
 		}
@@ -404,7 +405,7 @@ public class MeshGenerator : MonoBehaviour {
 			for (int x = 0; x < nodeCountX; x ++) {
 				for (int z = 0; z < nodeCountY; z ++) {
 
-					Vector3 pos = new Vector3(x * squareSize + squareSize/2 , terrainHeight, z * squareSize + squareSize/2 );
+					Vector3 pos = new Vector3(x * squareSize + squareSize/2 -0.5f , terrainHeight, z * squareSize + squareSize/2 -0.5f);
 					controlNodes[x,z] = new ControlNode(pos,map[x,z] == 1, squareSize);
 				}
 			}
@@ -426,10 +427,10 @@ public class MeshGenerator : MonoBehaviour {
 		public int configuration;
 		
 		public Square (ControlNode _topLeft, ControlNode _topRight, ControlNode _bottomRight, ControlNode _bottomLeft) {
-			topLeft = _topLeft;
-			topRight = _topRight;
+			topLeft     = _topLeft;
+			topRight    = _topRight;
 			bottomRight = _bottomRight;
-			bottomLeft = _bottomLeft;
+			bottomLeft  = _bottomLeft;
 			
 			centreTop = topLeft.right;
 			centreRight = bottomRight.above;
