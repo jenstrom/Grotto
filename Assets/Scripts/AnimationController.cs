@@ -12,9 +12,10 @@ public class AnimationController : MonoBehaviour {
     }
 
     // TESTING
-    void Update () {
+    void Update()
+    {
 
-        if ( Input.GetMouseButton(1) )
+        if (Input.GetMouseButton(1))
         {
             RunAnimation("walk");
         }

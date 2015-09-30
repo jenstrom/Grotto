@@ -10,9 +10,10 @@ public class MapMouseOver : MonoBehaviour {
 	
 		selection = Instantiate(selection) as GameObject;
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    // Update is called once per frame
+    void Update()
+    {
         // OFFSET THE MOUSE POINTER (so it is center over the tile-"selection" 
         // the 0,0 is bottom left screen pixels so the screen resoluton does mather... need to build/check diffrently
         /* This is how i must do it.. to compensate for the fact that the grid dont have an offset of 0.5 in xy */
@@ -25,39 +26,43 @@ public class MapMouseOver : MonoBehaviour {
         //Ray ray = Camera.main.ScreenPointToRay( Input.mousePosition );
 
         RaycastHit hitInfo;
-		
-		if( GetComponent<Collider>().Raycast( ray, out hitInfo, Mathf.Infinity ) ) {
-			int x = Mathf.FloorToInt( hitInfo.point.x );
-			int z = Mathf.FloorToInt( hitInfo.point.z );
-			//Debug.Log ("Tile: " + x + ", " + z);
 
-			currentTileCoord.x = x;
-			currentTileCoord.z = z;
+        if (GetComponent<Collider>().Raycast(ray, out hitInfo, Mathf.Infinity))
+        {
+            int x = Mathf.FloorToInt(hitInfo.point.x);
+            int z = Mathf.FloorToInt(hitInfo.point.z);
+            //Debug.Log ("Tile: " + x + ", " + z);
 
-			selection.SetActive(true);
+            currentTileCoord.x = x;
+            currentTileCoord.z = z;
 
-			GameObject map = GameObject.Find("MapController");
-			MapController mapController = map.GetComponent<MapController>();
+            selection.SetActive(true);
+
+            GameObject map = GameObject.Find("MapController");
+            MapController mapController = map.GetComponent<MapController>();
 
 
-			// If the tile is walkable. 
-			if( mapController.GetTileType(x,z).isWalkable )
-			{
-				selection.transform.position = currentTileCoord;
-			}
-			else {
-				// Hide selection cube
-				selection.SetActive(false);
-			}
-		
-		}
-		else {
-			// Hide selection cube
-			selection.SetActive(false);
-		}
-		
-		if(Input.GetMouseButtonDown(0)) {
-			//Debug.Log ("Click!");
-		}
-	}
+            // If the tile is walkable. 
+            if (mapController.GetTileType(x, z).isWalkable)
+            {
+                selection.transform.position = currentTileCoord;
+            }
+            else
+            {
+                // Hide selection cube
+                selection.SetActive(false);
+            }
+
+        }
+        else
+        {
+            // Hide selection cube
+            selection.SetActive(false);
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            //Debug.Log ("Click!");
+        }
+    }
 }

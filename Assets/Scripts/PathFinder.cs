@@ -48,7 +48,7 @@ public static class PathFinder
 					for (int j = 0; j < colliders.Length; j++) {
 						if (colliders[j].gameObject.tag != "Floor")
 						{
-							if (colliders[j].gameObject.tag == "PlayerCollider")
+							if (colliders[j].gameObject.tag == "Player")
 							{
 								continue;
 							}

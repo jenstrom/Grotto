@@ -9,7 +9,6 @@ public class GameController : MonoBehaviour {
 	private PlayerController player;
 	private MapController map;
 	private List<EnemyAI> activeEnemies = new List<EnemyAI>();
-	private GameObject recentlyInstantiated;
 
 	public float speed = 0.05f;
 	private float distanceCovered;
@@ -22,15 +21,11 @@ public class GameController : MonoBehaviour {
 		distanceCovered = 0f;
 		player.PlayerInputAllowed = true;
 
-
 		SpawnEnemy();
-
 	}
 
 	void Update () 
 	{
-
-
 		if (player.ActionTaken)
 		{
 			player.ActionTaken = false;
@@ -39,24 +34,27 @@ public class GameController : MonoBehaviour {
 			{
 				activeEnemies[i].MakeChoice();
 			}
-		}
 
-		if (player.ActionToTake != 0)
+            for (int i = 0; i < activeEnemies.Count; i++)
+            {
+                activeEnemies[i].resetCollider();
+            }
+        }
+
+		if (player.ActionToTake != PlayerAction.unset)
 		{
 			distanceCovered += speed;
 
 			switch (player.ActionToTake)
 			{
-				//Player waiting
-			case 1:
+			case PlayerAction.wait:
 				if (EnemyMovement())
 				{
 					return;
 				}
 				break;
-
-				//Player Moving
-			case 2:
+                    
+			case PlayerAction.move:
 				bool playerMoving = PlayerMovement();
 				bool enemyMoving = EnemyMovement();
 				if (playerMoving || enemyMoving)
@@ -64,9 +62,8 @@ public class GameController : MonoBehaviour {
 					return;
 				}
 				break;
-
-				//Player Attacking
-			case 3:
+                    
+			case PlayerAction.attack:
 				// Player Attack
 				if (EnemyMovement())
 				{
@@ -75,7 +72,8 @@ public class GameController : MonoBehaviour {
 				break;
 			}
 			distanceCovered = 0f;
-			player.ActionToTake = 0;
+			player.ActionToTake = PlayerAction.unset;
+            player.resetCollider();
 			player.PlayerInputAllowed = true;
 		}
 	}
@@ -84,8 +82,8 @@ public class GameController : MonoBehaviour {
 
 	bool PlayerMovement()
 	{
-		Vector3 startPosition = player.StartPosition;
-		Vector3 goalPosition = player.MoveTo.transform.position;
+		Vector3 startPosition = player.MoveFrom;
+		Vector3 goalPosition = player.MoveTo;
 		
 		if (player.gameObject.transform.position != goalPosition)
 		{
@@ -103,7 +101,7 @@ public class GameController : MonoBehaviour {
 
 		for (int i = 0; i < activeEnemies.Count; i++) 
 		{
-			startPosition = activeEnemies[i].StartPosition;
+			startPosition = activeEnemies[i].MoveFrom;
 			goalPosition = activeEnemies[i].MoveTo;
 
 			if (activeEnemies[i].gameObject.transform.position != goalPosition)
@@ -118,12 +116,11 @@ public class GameController : MonoBehaviour {
 	void SpawnEnemy()
 	{
 		List<Vector3> spawnPoints =  map.GetCoordinatesOfTileTypes(0);
-		GameObject enemy = new GameObject();
 
 		for (int i = 0; i < spawnPoints.Count; i++) 
 		{
 			spawnPoints[i] = new Vector3(spawnPoints[i].x, 0.5f, spawnPoints[i].z);
-			enemy = (GameObject) Instantiate(enemyPrefabs[0], spawnPoints[i], Quaternion.identity);
+			var enemy = (GameObject) Instantiate(enemyPrefabs[0], spawnPoints[i], Quaternion.identity);
 			activeEnemies.Add(enemy.GetComponent<EnemyAI>());
 		}
 

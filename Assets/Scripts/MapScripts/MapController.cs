@@ -135,7 +135,8 @@ public class MapController : MonoBehaviour {
 
 		tileTypes [4].name 		 = "Torch";
 		tileTypes [4].isWalkable = true;
-        tileTypes [4].prefab     = Resources.Load("Prefabs/MapPrefabs/Torch_01_Prefab") as GameObject;
+        tileTypes [4].prefab     = null;
+        //tileTypes [4].prefab     = Resources.Load("Prefabs/MapPrefabs/Torch_01_Prefab") as GameObject;
 		tileTypes [4].display 	 = true;
         tileTypes [4].color      = Color.magenta;
 
@@ -203,7 +204,7 @@ public class MapController : MonoBehaviour {
             }
         }
 
-        PlaceRoatedDoors();
+        //PlaceRoatedDoors();
 
         if (generateFogOfWar){
 			//Generate FogOfWar from fogofwar script (based on map size) 
