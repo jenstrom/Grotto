@@ -4,21 +4,19 @@ using System.Collections.Generic;
 
 public class GameController : MonoBehaviour {
 
-
 	public GameObject[] enemyPrefabs;
 	private PlayerController player;
 	private MapController map;
 	private List<EnemyAI> activeEnemies = new List<EnemyAI>();
 
-	public float speed = 0.05f;
-	private float distanceCovered;
+	public float moveSpeed = 0.05f;
+    public float rotationSpeed = 0.1f;
 
 	// Use this for initialization
 	void Start () 
 	{
 		player = (PlayerController) FindObjectOfType (typeof(PlayerController));
 		map = (MapController) FindObjectOfType (typeof(MapController));
-		distanceCovered = 0f;
 		player.PlayerInputAllowed = true;
 
 		SpawnEnemy();
@@ -39,81 +37,192 @@ public class GameController : MonoBehaviour {
             {
                 activeEnemies[i].resetCollider();
             }
+            player.resetCollider();
+
         }
 
-		if (player.ActionToTake != PlayerAction.unset)
+        if (player.ActionToTake != PlayerAction.unset)
 		{
-			distanceCovered += speed;
 
 			switch (player.ActionToTake)
 			{
 			case PlayerAction.wait:
-				if (EnemyMovement())
+				if (PlayerWaiting())
 				{
 					return;
 				}
 				break;
                     
 			case PlayerAction.move:
-				bool playerMoving = PlayerMovement();
-				bool enemyMoving = EnemyMovement();
-				if (playerMoving || enemyMoving)
+				if (PlayerMoving())
 				{
 					return;
 				}
 				break;
                     
 			case PlayerAction.attack:
-				// Player Attack
-				if (EnemyMovement())
+				if (PlayerAttacking())
 				{
 					return;
 				}
 				break;
 			}
-			distanceCovered = 0f;
 			player.ActionToTake = PlayerAction.unset;
-            player.resetCollider();
 			player.PlayerInputAllowed = true;
 		}
 	}
 
+    bool PlayerWaiting()
+    {
+        //bool enemyRotated = EnemyRotation();
+        bool enemyRotated = true;
 
+        if (enemyRotated)
+        {
+            bool enemyMoved = EnemyMovement();
+            bool enemyAttacked = EnemyAttack();
 
-	bool PlayerMovement()
+            if (enemyMoved && enemyAttacked)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool PlayerMoving()
+    {
+        bool playerRotated = PlayerRotation();
+        bool enemyRotated = EnemyRotation();
+        //bool enemyRotated = true;
+
+        if (playerRotated && enemyRotated)
+        {
+            bool playerMoved = PlayerMovement();
+            bool enemyMoved = EnemyMovement();
+
+            if (playerMoved && enemyMoved)
+            {
+                bool enemyAttacked = EnemyAttack();
+
+                if (enemyAttacked)
+                {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    bool PlayerAttacking()
+    {
+        bool playerRotated = PlayerRotation();
+
+        if (PlayerRotation())
+        {
+            bool playerAttacked = PlayerAttack();
+
+            if (playerAttacked)
+            {
+                //bool enemyRotated = EnemyRotation();
+                bool enemyRotated = true;
+
+                if (enemyRotated)
+                {
+                    bool enemyMoved = EnemyMovement();
+                    bool enemyAttacked = EnemyAttack();
+
+                    if (enemyMoved && enemyAttacked)
+                    {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+    bool PlayerRotation()
+    { 
+        Vector3 currentPosition = player.gameObject.transform.position;
+        Vector3 goalPosition = player.MoveTo;
+
+        if (player.gameObject.transform.rotation != Quaternion.LookRotation(player.MoveTo - player.MoveFrom))
+        {
+            Vector3 newDir = Vector3.RotateTowards(player.gameObject.transform.forward, player.MoveTo - player.MoveFrom, rotationSpeed, 0.0F);
+            player.gameObject.transform.rotation = Quaternion.LookRotation(newDir);
+            return false;
+        }
+        return true;
+    }
+
+    bool EnemyRotation()
+    {
+        Vector3 currentPosition;
+        Vector3 goalPosition;
+        bool rotationComplete = true;
+
+        for (int i = 0; i < activeEnemies.Count; i++)
+        {
+            currentPosition = activeEnemies[i].gameObject.transform.position;
+            goalPosition = activeEnemies[i].MoveTo;
+
+            if (activeEnemies[i].gameObject.transform.rotation != Quaternion.LookRotation(activeEnemies[i].MoveTo - activeEnemies[i].MoveFrom)) 
+            {
+                Vector3 newDir = Vector3.RotateTowards(activeEnemies[i].gameObject.transform.forward, activeEnemies[i].MoveTo - activeEnemies[i].MoveFrom, rotationSpeed, 0.0F);
+                activeEnemies[i].gameObject.transform.rotation = Quaternion.LookRotation(newDir);
+                rotationComplete = false;
+            }
+        }
+        return rotationComplete;
+    }
+
+    bool PlayerMovement()
 	{
-		Vector3 startPosition = player.MoveFrom;
-		Vector3 goalPosition = player.MoveTo;
-		
-		if (player.gameObject.transform.position != goalPosition)
+        Vector3 currentPosition = player.gameObject.transform.position;
+        Vector3 goalPosition = player.MoveTo;
+
+        if (player.gameObject.transform.position != player.MoveTo)
 		{
-			player.gameObject.transform.position = Vector3.Lerp(startPosition, goalPosition, distanceCovered);
-			return true;
+            float step = moveSpeed * Time.deltaTime;
+			player.gameObject.transform.position = Vector3.MoveTowards(currentPosition, goalPosition, moveSpeed);
+			return false;
 		}
-		return false;
+		return true;
 	}
 
 	bool EnemyMovement()
 	{
-		Vector3 startPosition;
+		Vector3 currentPosition;
 		Vector3 goalPosition;
-		bool stillMoving = false;
+		bool moveComplete = true;
 
 		for (int i = 0; i < activeEnemies.Count; i++) 
 		{
-			startPosition = activeEnemies[i].MoveFrom;
-			goalPosition = activeEnemies[i].MoveTo;
+            currentPosition = activeEnemies[i].gameObject.transform.position;
+            goalPosition = activeEnemies[i].MoveTo;
 
-			if (activeEnemies[i].gameObject.transform.position != goalPosition)
+            if (activeEnemies[i].gameObject.transform.position != goalPosition)
 			{
-				activeEnemies[i].gameObject.transform.position = Vector3.Lerp(startPosition, goalPosition, distanceCovered);
-				stillMoving = true;
+                float step = moveSpeed * Time.deltaTime;
+				activeEnemies[i].gameObject.transform.position = Vector3.MoveTowards(currentPosition, goalPosition, moveSpeed);
+				moveComplete = false;
 			}
 		}
-		return stillMoving;
+		return moveComplete;
 	}
 
-	void SpawnEnemy()
+    bool PlayerAttack()
+    {
+        return true;
+    }
+
+    bool EnemyAttack()
+    {
+        return true;
+    }
+
+    void SpawnEnemy()
 	{
 		List<Vector3> spawnPoints =  map.GetCoordinatesOfTileTypes(0);
 

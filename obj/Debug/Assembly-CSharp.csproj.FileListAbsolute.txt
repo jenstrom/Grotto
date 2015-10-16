@@ -20,3 +20,7 @@ C:\Users\Jonatan Enström\Documents\Unity\Grotto\Temp\bin\Debug\UnityEngine.Netw
 C:\Users\Jonatan Enström\Documents\Unity\Grotto\obj\Debug\Assembly-CSharp.csprojResolveAssemblyReference.cache
 C:\Users\Jonatan Enström\Documents\Unity\Grotto\obj\Debug\Assembly-CSharp.dll
 C:\Users\Jonatan Enström\Documents\Unity\Grotto\obj\Debug\Assembly-CSharp.pdb
+C:\Users\Jonatan Enström\Documents\Unity\Grotto\Temp\bin\Debug\UnityEngine.Advertisements.dll
+C:\Users\Jonatan Enström\Documents\Unity\Grotto\Temp\bin\Debug\UnityEngine.Analytics.dll
+C:\Users\Jonatan Enström\Documents\Unity\Grotto\Temp\bin\Debug\UnityEngine.Advertisements.xml
+C:\Users\Jonatan Enström\Documents\Unity\Grotto\Temp\bin\Debug\UnityEngine.Analytics.xml
